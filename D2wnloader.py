@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import threading, time
 from urllib import parse
 import requests
@@ -80,7 +79,7 @@ class DLWorker:
 
 class D2wnloader:
     def __init__(self, url: str, download_dir: str = f".{os.sep}d2l{os.sep}", blocks_num: int = 8):
-        assert 0 <= blocks_num <= 32
+        assert 0 <= blocks_num <= 64
         self.url = url
         self.user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:97.0) Gecko/20100101 Firefox/97.0'
         filename = self.url.split("/")[-1]
@@ -110,6 +109,7 @@ class D2wnloader:
             self.__main_thread_done = threading.Event()
             # 显示基本信息
             readable_size = self.__get_readable_size(self.file_size)
+            print("target_size=",readable_size)
             pathfilename = os.path.join(self.download_dir, self.filename)
 
     def __get_size(self):
@@ -306,7 +306,11 @@ class D2wnloader:
                 speed = s / t
                 readable_speed = self.__get_readable_size(speed)  # 变成方便阅读的样式
                 percentage = self.__download_record[-1]["size"] / self.file_size * 100
-                status_msg = f"\r[info] {percentage:.1f} % | {readable_speed}/s | {len(self.workers)}+{threading.active_count() - len(self.workers)} {(time.time() - self.startdlsince):.0f}s"
+                if speed<=0:
+                    eta="null"
+                else:
+                    eta=int((self.file_size-self.__download_record[-1]["size"])/speed)
+                status_msg = f"\r{percentage:.1f} % | {readable_speed}/s | {len(self.workers)}+{threading.active_count() - len(self.workers)} | {(time.time() - self.startdlsince):.0f}s | ETA:{eta}s"
                 self.__whistleblower(status_msg)
                 # 监测下载速度下降
                 maxspeed = max(maxspeed, speed)
@@ -371,6 +375,6 @@ class D2wnloader:
 
 
 if __name__ == "__main__":
-    url = "https://qd.myapp.com/myapp/qqteam/pcqq/QQ9.0.8_3.exe"
-    dl = D2wnloader(url)
+    url = "https://ys-api.mihoyo.com/event/download_porter/link/ys_cn/official/pc_default"
+    dl = D2wnloader(url,blocks_num=2)
     dl.start()

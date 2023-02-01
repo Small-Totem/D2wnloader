@@ -345,6 +345,7 @@ class D2wnloader:
                         f.write(data)
                         f.flush()
                         data = cache_file.read(chunk_size)
+        print("Done.")
         self.clear()
         self.__whistleblower("\r")
         self.__main_thread_done.set()

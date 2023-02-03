@@ -110,6 +110,9 @@ class D2wnloader:
             # 显示基本信息
             readable_size = self.__get_readable_size(self.file_size)
             print("target_size=",readable_size)
+            if self.file_size<=100*1024:#100kb
+                print("canceled.")
+                sys.exit(0)
             pathfilename = os.path.join(self.download_dir, self.filename)
 
     def __get_size(self):
@@ -379,3 +382,11 @@ if __name__ == "__main__":
     url = "https://ys-api.mihoyo.com/event/download_porter/link/ys_cn/official/pc_default"
     dl = D2wnloader(url,blocks_num=2)
     dl.start()
+
+'''
+usage:
+import D2wnloader.D2wnloader as d2l
+url = "?"
+dl = d2l.D2wnloader(url,blocks_num=32)
+dl.start()
+'''

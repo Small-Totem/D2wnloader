@@ -1,5 +1,14 @@
 # D2wnloader
 
+```python
+#Small_Totem:在ipynb脚本中使用
+!git clone https://github.com/Small-Totem/D2wnloader.git
+import D2wnloader.D2wnloader as d2l
+url = "..."
+dl = d2l.D2wnloader(url,blocks_num=64)
+dl.start()
+```
+
 **Python** **多线程下载** **分块下载** **断点续传**
 
 由于手机尤其是 iPhone 根本没有下载工具，官方不允许这种东西上架。
